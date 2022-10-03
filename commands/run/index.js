@@ -66,7 +66,7 @@ class RunCommand extends Command {
   }
 
   execute() {
-    if (!this.options.useNx) {
+    if (this.options.useNx === false) {
       this.logger.info(
         "",
         "Executing command in %d %s: %j",
@@ -79,7 +79,7 @@ class RunCommand extends Command {
     let chain = Promise.resolve();
     const getElapsed = timer();
 
-    if (this.options.useNx) {
+    if (this.options.useNx !== false) {
       chain = chain.then(() => this.runScriptsUsingNx());
     } else if (this.options.parallel) {
       chain = chain.then(() => this.runScriptInPackagesParallel());
@@ -333,14 +333,13 @@ class RunCommand extends Command {
       nxOutput.output.cliName = "Lerna (powered by Nx)";
       nxOutput.output.formatCommand = (taskId) => taskId;
       return nxOutput;
-    } catch (e) {
+    } catch (err) {
+      // This should be unreachable and we would want to know if it somehow occurred in a user's setup.
       this.logger.error(
         "\n",
-        "You have set 'useNx: true' in lerna.json, but you haven't installed Nx as a dependency.\n" +
-          "To do it run 'npm install -D nx@latest' or 'yarn add -D -W nx@latest'.\n" +
-          "Optional: To configure the caching and distribution run 'npx nx init' after installing it."
+        "There was a critical error when configuring the task runner, please report this on https://github.com/lerna/lerna"
       );
-      process.exit(1);
+      throw err;
     }
   }
 }

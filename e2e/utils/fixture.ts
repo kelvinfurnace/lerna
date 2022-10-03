@@ -240,12 +240,7 @@ export class Fixture {
     }
   }
 
-  async addNxToWorkspace(): Promise<void> {
-    await this.updateJson("lerna.json", (json) => ({
-      ...json,
-      useNx: true,
-    }));
-
+  async addNxConfigToWorkspace(): Promise<void> {
     writeJsonFile(this.getWorkspacePath("nx.json"), {
       extends: "nx/presets/npm.json",
       tasksRunnerOptions: {
@@ -254,8 +249,6 @@ export class Fixture {
         },
       },
     });
-
-    await this.install("-D nx@latest");
   }
 
   async addPackagesDirectory(path: string): Promise<void> {

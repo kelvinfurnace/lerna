@@ -299,7 +299,7 @@ describe("useNx", () => {
       forceDeterministicTerminalOutput: true,
     });
 
-    await fixture.addNxToWorkspace();
+    await fixture.addNxConfigToWorkspace();
 
     await fixture.lerna("create package-1 -y");
     await fixture.addScriptsToPackage({
